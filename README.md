@@ -8,3 +8,4 @@
 - [ ] Splash Screen
 - [ ] Authentication Page
 - [ ] Home Page
+- [ ] User Profile Page
