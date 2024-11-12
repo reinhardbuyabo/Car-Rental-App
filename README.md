@@ -5,7 +5,7 @@ f
 ## Todos
 
 ### Milestone 1 [Due 4th November]
-- [ ] Splash Screen
+- [x] Splash Screen ✅
 - [ ] Authentication Page
 - [ ] Home Page
 - [ ] User Profile Page
