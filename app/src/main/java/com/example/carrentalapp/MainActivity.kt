@@ -38,8 +38,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CarRentalAppTheme {
-                val navController = rememberNavController()
-
                 // Call AuthenticationScreen
                 AuthenticationScreen()
             }
