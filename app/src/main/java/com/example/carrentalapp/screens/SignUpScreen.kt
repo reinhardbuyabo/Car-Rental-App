@@ -1,15 +1,18 @@
 package com.example.carrentalapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Email
@@ -46,7 +49,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(onLoginClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -55,7 +58,6 @@ fun SignUpScreen() {
     val context = LocalContext.current
 
     val authenticationManager = remember { AuthenticationManager(context) }
-
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -77,10 +79,9 @@ fun SignUpScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Username
         OutlinedTextField(
             value = username,
-            onValueChange = { newValue -> username = newValue },
+            onValueChange = { username = it },
             placeholder = { Text(text = "Username") },
             leadingIcon = { Icon(imageVector = Icons.Rounded.Person, contentDescription = null) },
             shape = RoundedCornerShape(16.dp),
@@ -90,10 +91,9 @@ fun SignUpScreen() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Email
         OutlinedTextField(
             value = email,
-            onValueChange = { newValue -> email = newValue },
+            onValueChange = { email = it },
             placeholder = { Text(text = "Email") },
             leadingIcon = { Icon(imageVector = Icons.Rounded.Email, contentDescription = null) },
             shape = RoundedCornerShape(16.dp),
@@ -103,10 +103,9 @@ fun SignUpScreen() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Password
         OutlinedTextField(
             value = password,
-            onValueChange = { newValue -> password = newValue },
+            onValueChange = { password = it },
             placeholder = { Text(text = "Password") },
             leadingIcon = { Icon(imageVector = Icons.Rounded.Lock, contentDescription = null) },
             shape = RoundedCornerShape(16.dp),
@@ -116,10 +115,9 @@ fun SignUpScreen() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Confirm Password
         OutlinedTextField(
             value = confirmPassword,
-            onValueChange = { newValue -> confirmPassword = newValue },
+            onValueChange = { confirmPassword = it },
             placeholder = { Text(text = "Confirm Password") },
             leadingIcon = { Icon(imageVector = Icons.Rounded.Lock, contentDescription = null) },
             shape = RoundedCornerShape(16.dp),
@@ -132,11 +130,11 @@ fun SignUpScreen() {
         Button(
             onClick = {
                 if (password == confirmPassword) {
-                    authenticationManager.createAccountWithEmail( email, password)
+                    authenticationManager.createAccountWithEmail(email, password)
                         .onEach { response ->
                             when (response) {
                                 is AuthResponse.Success -> {
-                                    // Navigate to a welcome or login screen
+                                    // Navigate to login screen
                                     // TODO
                                 }
                                 is AuthResponse.Error -> {
@@ -165,44 +163,20 @@ fun SignUpScreen() {
             )
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Or continue with",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
+        Spacer(modifier = Modifier.height(10.dp))
 
-        OutlinedButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color.DarkGray
-            ),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(R.drawable.google),
-                contentDescription = null,
-                modifier = Modifier.size(36.dp)
-            )
+            Text(text = "Already have an account?", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Sign up with Google",
+                text = "Log In",
+                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.clickable(onClick = onLoginClick)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SignUpPreview() {
-    CarRentalAppTheme {
-        SignUpScreen()
     }
 }

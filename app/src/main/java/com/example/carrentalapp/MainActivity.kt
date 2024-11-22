@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.navigation.compose.rememberNavController
+import com.example.carrentalapp.screens.AuthenticationScreen
 import com.example.carrentalapp.screens.LoginScreen
 import com.example.carrentalapp.ui.theme.CarRentalAppTheme
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -26,7 +28,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.callbackFlow
 import java.security.MessageDigest
 import java.util.UUID
@@ -37,7 +38,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CarRentalAppTheme {
-                LoginScreen()
+                val navController = rememberNavController()
+
+                // Call AuthenticationScreen
+                AuthenticationScreen()
             }
         }
     }

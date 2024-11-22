@@ -1,15 +1,18 @@
 package com.example.carrentalapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Email
@@ -45,23 +48,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun LoginScreen(){
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
+fun LoginScreen(onSignUpClick: () -> Unit) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     val context = LocalContext.current
 
-    val authenticationManager = remember {
-        AuthenticationManager(context)
-    }
-
+    val authenticationManager = remember { AuthenticationManager(context) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
@@ -82,15 +78,9 @@ fun LoginScreen(){
 
         OutlinedTextField(
             value = email,
-            onValueChange = { newValue ->
-                email = newValue
-            },
-            placeholder = {
-                Text(text = "Email")
-            },
-            leadingIcon = {
-                Icon(imageVector = Icons.Rounded.Email, contentDescription = null)
-            },
+            onValueChange = { email = it },
+            placeholder = { Text(text = "Email") },
+            leadingIcon = { Icon(imageVector = Icons.Rounded.Email, contentDescription = null) },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = VisualTransformation.None
@@ -100,15 +90,9 @@ fun LoginScreen(){
 
         OutlinedTextField(
             value = password,
-            onValueChange = { newValue ->
-                password = newValue
-            },
-            placeholder = {
-                Text(text = "Password")
-            },
-            leadingIcon = {
-                Icon(imageVector = Icons.Rounded.Lock, contentDescription = null)
-            },
+            onValueChange = { password = it },
+            placeholder = { Text(text = "Password") },
+            leadingIcon = { Icon(imageVector = Icons.Rounded.Lock, contentDescription = null) },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation()
@@ -120,12 +104,15 @@ fun LoginScreen(){
             onClick = {
                 authenticationManager.loginWithEmail(email, password)
                     .onEach { response ->
-                        if (response is AuthResponse.Success) {
-                            // Navigate to home screen
-                            // TODO
-                        } else if (response is AuthResponse.Error) {
-                            // Show error message
-                            // TODO
+                        when (response) {
+                            is AuthResponse.Success -> {
+                                // Navigate to home screen
+                                // TODO
+                            }
+                            is AuthResponse.Error -> {
+                                // Show error message
+                                // TODO
+                            }
                         }
                     }
                     .launchIn(coroutineScope)
@@ -144,44 +131,20 @@ fun LoginScreen(){
             )
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Or continue with",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
+        Spacer(modifier = Modifier.height(10.dp))
 
-        OutlinedButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color.DarkGray
-            ),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(R.drawable.google),
-                contentDescription = null,
-                modifier = Modifier.size(36.dp)
-            )
+            Text(text = "Don't have an account?", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Sign in with Google",
+                text = "Sign Up",
+                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary),
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.clickable(onClick = onSignUpClick)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun LoginPreview() {
-    CarRentalAppTheme {
-        LoginScreen()
     }
 }
