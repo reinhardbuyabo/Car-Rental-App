@@ -28,6 +28,11 @@
             android:name=".MainActivity"
             android:exported="false"
         />
+
+        <meta-data
+            android:name="API_KEY"
+            android:value="${API_KEY}"
+            />
     </application>
 
 </manifest>
