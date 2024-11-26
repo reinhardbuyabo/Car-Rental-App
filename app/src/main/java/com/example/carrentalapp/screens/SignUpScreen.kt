@@ -1,5 +1,6 @@
 package com.example.carrentalapp.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,7 +50,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun SignUpScreen(onLoginClick: () -> Unit) {
+fun SignUpScreen(onLoginClick: () -> Unit, onAuth: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -136,10 +137,12 @@ fun SignUpScreen(onLoginClick: () -> Unit) {
                                 is AuthResponse.Success -> {
                                     // Navigate to login screen
                                     // TODO
+                                    onAuth()
+                                    Log.e("SignUpScreen", "Success")
                                 }
                                 is AuthResponse.Error -> {
                                     // Show error message
-                                    // TODO
+                                    Log.e("SignUpScreen", response.message)
                                 }
                             }
                         }

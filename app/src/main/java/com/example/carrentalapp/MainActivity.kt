@@ -2,28 +2,19 @@ package com.example.carrentalapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.navigation.compose.rememberNavController
-import com.example.carrentalapp.screens.AuthenticationScreen
-import com.example.carrentalapp.screens.LoginScreen
+import com.example.carrentalapp.router.Router
 import com.example.carrentalapp.ui.theme.CarRentalAppTheme
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.Firebase
-import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.channels.awaitClose
@@ -39,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CarRentalAppTheme {
                 // Call AuthenticationScreen
-                AuthenticationScreen()
+                Router()
             }
         }
     }
@@ -47,6 +38,7 @@ class MainActivity : ComponentActivity() {
 
 class AuthenticationManager(val context: Context) {
     private val auth = Firebase.auth
+    val currentUser = auth.currentUser
 
 //    return a value when user is created
     fun createAccountWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {
@@ -88,6 +80,7 @@ class AuthenticationManager(val context: Context) {
     }
 
     fun signInWithGoogle(): Flow<AuthResponse> = callbackFlow {
+        Log.d("TAG", "signInWithGoogle: Button Clicked")
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(context.getString(R.string.web_client_id))

@@ -1,5 +1,6 @@
 package com.example.carrentalapp.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,16 +49,23 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun LoginScreen(onSignUpClick: () -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(onSignUpClick: () -> Unit, onAuth: () -> Unit){
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
 
     val context = LocalContext.current
 
-    val authenticationManager = remember { AuthenticationManager(context) }
+    val authenticationManager = remember {
+        AuthenticationManager(context)
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
+    Column (
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
@@ -78,9 +86,15 @@ fun LoginScreen(onSignUpClick: () -> Unit) {
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
-            placeholder = { Text(text = "Email") },
-            leadingIcon = { Icon(imageVector = Icons.Rounded.Email, contentDescription = null) },
+            onValueChange = { newValue ->
+                email = newValue
+            },
+            placeholder = {
+                Text(text = "Email")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Rounded.Email, contentDescription = null)
+            },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = VisualTransformation.None
@@ -90,9 +104,15 @@ fun LoginScreen(onSignUpClick: () -> Unit) {
 
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
-            placeholder = { Text(text = "Password") },
-            leadingIcon = { Icon(imageVector = Icons.Rounded.Lock, contentDescription = null) },
+            onValueChange = { newValue ->
+                password = newValue
+            },
+            placeholder = {
+                Text(text = "Password")
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Rounded.Lock, contentDescription = null)
+            },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation()
@@ -104,15 +124,14 @@ fun LoginScreen(onSignUpClick: () -> Unit) {
             onClick = {
                 authenticationManager.loginWithEmail(email, password)
                     .onEach { response ->
-                        when (response) {
-                            is AuthResponse.Success -> {
-                                // Navigate to home screen
-                                // TODO
-                            }
-                            is AuthResponse.Error -> {
-                                // Show error message
-                                // TODO
-                            }
+                        if (response is AuthResponse.Success) {
+                            // Navigate to home screen
+                            // TODO
+                            onAuth()
+                            Log.e("LoginScreen", "Success")
+                        } else if (response is AuthResponse.Error) {
+                            // Show error message
+                            Log.e("LoginScreen", "Error: ${response.message}")
                         }
                     }
                     .launchIn(coroutineScope)
@@ -131,7 +150,41 @@ fun LoginScreen(onSignUpClick: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Or continue with",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        OutlinedButton(
+            onClick = {
+                authenticationManager.signInWithGoogle()
+                Log.d("TAG", "LoginScreen: Sign in With Google Button Clicked")
+                onAuth
+                },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color.DarkGray
+            ),
+        ) {
+            Image(
+                painter = painterResource(R.drawable.google),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp),
+            )
+            Text(
+                text = "Sign in with Google",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
