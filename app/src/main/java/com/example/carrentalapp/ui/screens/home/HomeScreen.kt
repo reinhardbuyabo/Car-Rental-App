@@ -1,4 +1,4 @@
-package com.example.carrentalapp.screens.user
+package com.example.carrentalapp.ui.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

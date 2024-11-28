@@ -1,4 +1,4 @@
-package com.example.carrentalapp.screens
+package com.example.carrentalapp.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -39,12 +39,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.carrentalapp.AuthResponse
 import com.example.carrentalapp.AuthenticationManager
 import com.example.carrentalapp.R
-import com.example.carrentalapp.ui.theme.CarRentalAppTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
